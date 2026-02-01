@@ -6,10 +6,14 @@ import { supabase } from '@/lib/supabaseClient';
 import { uploadClientPhoto } from '@/lib/supabaseStorage';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, User, Camera, Utensils, Upload, Sparkles } from 'lucide-react';
+import { ArrowLeft, User, Camera, Utensils, Upload, Sparkles, LineChart, ClipboardList } from 'lucide-react';
 import { toast } from 'sonner';
 import PhotoCompareSlider from '@/components/PhotoCompareSlider';
 import PlanDisplay from '@/components/PlanDisplay';
+import ProgressChart from '@/components/ProgressChart';
+import BodyCompositionInput from '@/components/BodyCompositionInput';
+import TrainingLogInput from '@/components/TrainingLogInput';
+import TrainingLogList from '@/components/TrainingLogList';
 import type { PlanResult } from '@/app/plan/page';
 
 interface Client {
@@ -23,7 +27,7 @@ interface Client {
     after_photo_url?: string;
 }
 
-type Tab = 'info' | 'photos' | 'meals' | 'plans';
+type Tab = 'info' | 'photos' | 'meals' | 'plans' | 'progress' | 'logs';
 
 export default function ClientDetailPage() {
     const params = useParams();
@@ -35,40 +39,58 @@ export default function ClientDetailPage() {
     const [activeTab, setActiveTab] = useState<Tab>('info');
     const [uploading, setUploading] = useState(false);
     const [plan, setPlan] = useState<PlanResult | null>(null);
+    const [trainingLogs, setTrainingLogs] = useState<any[]>([]);
+    const [bodyCompLogs, setBodyCompLogs] = useState<any[]>([]);
+
+    const fetchClientAndData = async () => {
+        // Fetch Client
+        const { data: clientData, error } = await supabase
+            .from('clients')
+            .select('*')
+            .eq('id', clientId)
+            .single();
+
+        if (error) {
+            console.error(error);
+            toast.error('生徒情報の取得に失敗しました');
+        } else {
+            setClient(clientData);
+        }
+
+        // Fetch Plan
+        const { data: planData } = await supabase
+            .from('plans')
+            .select('data')
+            .eq('client_id', clientId)
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .single();
+
+        if (planData) {
+            setPlan(planData.data);
+        }
+
+        // Fetch Training Logs
+        const { data: tLogs } = await supabase
+            .from('training_logs')
+            .select('*')
+            .eq('client_id', clientId)
+            .order('date', { ascending: false });
+        if (tLogs) setTrainingLogs(tLogs);
+
+        // Fetch Body Composition Logs
+        const { data: bLogs } = await supabase
+            .from('body_composition_logs')
+            .select('*')
+            .eq('client_id', clientId)
+            .order('date', { ascending: true });
+        if (bLogs) setBodyCompLogs(bLogs);
+
+        setLoading(false);
+    };
 
     useEffect(() => {
-        const fetchClientAndPlan = async () => {
-            // Fetch Client
-            const { data: clientData, error } = await supabase
-                .from('clients')
-                .select('*')
-                .eq('id', clientId)
-                .single();
-
-            if (error) {
-                console.error(error);
-                toast.error('生徒情報の取得に失敗しました');
-            } else {
-                setClient(clientData);
-            }
-
-            // Fetch Plan
-            const { data: planData } = await supabase
-                .from('plans')
-                .select('data')
-                .eq('client_id', clientId)
-                .order('created_at', { ascending: false })
-                .limit(1)
-                .single();
-
-            if (planData) {
-                setPlan(planData.data);
-            }
-
-            setLoading(false);
-        };
-
-        fetchClientAndPlan();
+        fetchClientAndData();
     }, [clientId]);
 
     const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>, type: 'before' | 'after') => {
@@ -115,10 +137,12 @@ export default function ClientDetailPage() {
     }
 
     const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
-        { id: 'info', label: '基本情報', icon: <User className="w-4 h-4" /> },
+        { id: 'info', label: '基本', icon: <User className="w-4 h-4" /> },
+        { id: 'progress', label: '推移', icon: <LineChart className="w-4 h-4" /> },
+        { id: 'logs', label: '実績', icon: <ClipboardList className="w-4 h-4" /> },
+        { id: 'plans', label: 'プラン', icon: <Sparkles className="w-4 h-4" /> },
         { id: 'photos', label: '写真', icon: <Camera className="w-4 h-4" /> },
         { id: 'meals', label: '食事', icon: <Utensils className="w-4 h-4" /> },
-        { id: 'plans', label: 'AIプラン', icon: <Sparkles className="w-4 h-4" /> },
     ];
 
     return (
@@ -132,14 +156,14 @@ export default function ClientDetailPage() {
             </div>
 
             {/* Tabs */}
-            <div className="flex gap-2 mb-6">
+            <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
                 {tabs.map((tab) => (
                     <Button
                         key={tab.id}
                         variant={activeTab === tab.id ? 'default' : 'outline'}
                         size="sm"
                         onClick={() => setActiveTab(tab.id)}
-                        className="flex items-center gap-2"
+                        className="flex items-center gap-2 whitespace-nowrap"
                     >
                         {tab.icon}
                         {tab.label}
@@ -182,6 +206,37 @@ export default function ClientDetailPage() {
                         )}
                     </CardContent>
                 </Card>
+            )}
+
+            {activeTab === 'progress' && (
+                <div className="space-y-6">
+                    <ProgressChart data={bodyCompLogs} />
+                    <BodyCompositionInput clientId={clientId} onAdded={fetchClientAndData} />
+                </div>
+            )}
+
+            {activeTab === 'logs' && (
+                <div className="space-y-6">
+                    <TrainingLogInput clientId={clientId} onAdded={fetchClientAndData} />
+                    <TrainingLogList logs={trainingLogs} />
+                </div>
+            )}
+
+            {activeTab === 'plans' && (
+                plan ? (
+                    <PlanDisplay plan={plan} />
+                ) : (
+                    <div className="text-center py-8">
+                        <Sparkles className="w-12 h-12 mx-auto text-[#9ca3af] mb-4" />
+                        <p className="text-[#64748b] mb-4">保存されたプランはありません</p>
+                        <Button
+                            onClick={() => router.push(`/plan`)}
+                            variant="outline"
+                        >
+                            新しく作成する
+                        </Button>
+                    </div>
+                )
             )}
 
             {activeTab === 'photos' && (
@@ -266,23 +321,6 @@ export default function ClientDetailPage() {
                         食事を登録する
                     </Button>
                 </div>
-            )}
-
-            {activeTab === 'plans' && (
-                plan ? (
-                    <PlanDisplay plan={plan} />
-                ) : (
-                    <div className="text-center py-8">
-                        <Sparkles className="w-12 h-12 mx-auto text-[#9ca3af] mb-4" />
-                        <p className="text-[#64748b] mb-4">保存されたプランはありません</p>
-                        <Button
-                            onClick={() => router.push(`/plan`)}
-                            variant="outline"
-                        >
-                            新しく作成する
-                        </Button>
-                    </div>
-                )
             )}
         </div>
     );
