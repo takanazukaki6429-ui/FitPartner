@@ -1,10 +1,11 @@
 "use client"
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { CheckCheck, AlertCircle, Loader2 } from "lucide-react";
+import { CheckCheck, AlertCircle, Loader2, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabaseClient";
 
@@ -22,6 +23,7 @@ type SessionWithClient = {
 };
 
 export default function Home() {
+  const router = useRouter();
   const [appointments, setAppointments] = useState<SessionWithClient[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -125,10 +127,16 @@ export default function Home() {
   return (
     <div className="space-y-6">
       <section>
-        <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-          今日の予約
-          <Badge variant="secondary" className="rounded-full">{appointments.filter(a => a.status === 'scheduled').length}</Badge>
-        </h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-bold flex items-center gap-2">
+            今日の予約
+            <Badge variant="secondary" className="rounded-full">{appointments.filter(a => a.status === 'scheduled').length}</Badge>
+          </h2>
+          <Button size="sm" onClick={() => router.push('/reservations/new')}>
+            <Plus className="w-4 h-4 mr-1" />
+            予約追加
+          </Button>
+        </div>
 
         <div className="space-y-3">
           {appointments.map((apt) => {
@@ -196,6 +204,6 @@ export default function Home() {
         <h3 className="text-sm font-semibold text-gray-500 mb-2">お知らせ</h3>
         <p className="text-sm text-gray-400">システムメンテナンス予定 (2/15)</p>
       </section>
-    </div>
+    </div >
   );
 }

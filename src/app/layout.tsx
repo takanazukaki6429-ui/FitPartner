@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google"; // Using Inter for professional look
+import { Toaster } from "sonner";
 import "./globals.css";
 import { MobileLayout } from "@/components/layout/MobileLayout";
 
@@ -23,6 +24,7 @@ export default function RootLayout({
         <MobileLayout>
           {children}
         </MobileLayout>
+        <Toaster />
       </body>
     </html>
   );
