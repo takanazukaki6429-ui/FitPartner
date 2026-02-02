@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google"; // Using Inter for professional look
+import type { Metadata, Viewport } from "next";
+import { Inter } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
 import { MobileLayout } from "@/components/layout/MobileLayout";
@@ -10,7 +10,13 @@ export const metadata: Metadata = {
   title: "FitPartner",
   description: "Personal Trainer Support App",
   manifest: "/manifest.json",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0", // Prevent zoom on mobile inputs
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({
