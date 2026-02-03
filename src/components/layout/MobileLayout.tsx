@@ -13,7 +13,7 @@ const NAV_ITEMS = [
         icon: LayoutDashboard,
     },
     {
-        label: '分析',
+        label: 'Analytics',
         href: '/analytics',
         icon: TrendingUp,
     },
