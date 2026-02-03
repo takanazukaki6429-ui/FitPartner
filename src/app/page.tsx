@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CheckCheck, AlertCircle, Loader2, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import ChurnAlertCard from "@/components/ChurnAlertCard";
 import { supabase } from "@/lib/supabaseClient";
 
 type SessionWithClient = {
@@ -126,6 +127,9 @@ export default function Home() {
 
   return (
     <div className="space-y-6">
+      {/* Churn Alert Section */}
+      <ChurnAlertCard />
+
       <section>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold flex items-center gap-2">
