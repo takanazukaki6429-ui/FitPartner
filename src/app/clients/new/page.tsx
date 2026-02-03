@@ -67,6 +67,7 @@ function NewClientForm() {
                 target_weight: data.targetWeight,
                 tickets_remaining: data.ticketsRemaining,
                 notes: data.notes,
+                status: 'trial', // Default to trial for new registrations
             }).select().single();
 
             if (error) throw error;

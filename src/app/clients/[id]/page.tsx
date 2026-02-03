@@ -7,6 +7,7 @@ import { uploadClientPhoto } from '@/lib/supabaseStorage';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, User, Camera, Utensils, Upload, Sparkles, LineChart, ClipboardList } from 'lucide-react';
+import { Badge } from "@/components/ui/badge";
 import { toast } from 'sonner';
 import PhotoCompareSlider from '@/components/PhotoCompareSlider';
 import PlanDisplay from '@/components/PlanDisplay';
@@ -15,6 +16,7 @@ import BodyCompositionInput from '@/components/BodyCompositionInput';
 import TrainingLogInput from '@/components/TrainingLogInput';
 import TrainingLogList from '@/components/TrainingLogList';
 import type { PlanResult } from '@/app/plan/page';
+import StatusChangeDialog from '@/components/StatusChangeDialog';
 
 interface Client {
     id: string;
@@ -25,6 +27,9 @@ interface Client {
     notes: string;
     before_photo_url?: string;
     after_photo_url?: string;
+    status?: string;
+    joined_at?: string;
+    lost_reason?: string;
 }
 
 type Tab = 'info' | 'photos' | 'meals' | 'plans' | 'progress' | 'logs';
@@ -41,6 +46,7 @@ export default function ClientDetailPage() {
     const [plan, setPlan] = useState<PlanResult | null>(null);
     const [trainingLogs, setTrainingLogs] = useState<any[]>([]);
     const [bodyCompLogs, setBodyCompLogs] = useState<any[]>([]);
+    const [showStatusDialog, setShowStatusDialog] = useState(false);
 
     const fetchClientAndData = async () => {
         // Fetch Client
@@ -148,12 +154,39 @@ export default function ClientDetailPage() {
     return (
         <div className="pb-20">
             {/* Header */}
-            <div className="flex items-center gap-3 mb-6">
-                <Button variant="ghost" size="icon" onClick={() => router.back()}>
-                    <ArrowLeft className="w-5 h-5" />
-                </Button>
-                <h1 className="text-xl font-bold">{client.name}</h1>
+            <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                    <Button variant="ghost" size="icon" onClick={() => router.back()}>
+                        <ArrowLeft className="w-5 h-5" />
+                    </Button>
+                    <h1 className="text-xl font-bold">{client.name}</h1>
+                    {client.status === 'trial' && (
+                        <Badge className="bg-[#fbbf24] text-[#78350f]">体験</Badge>
+                    )}
+                    {client.status === 'member' && (
+                        <Badge className="bg-[#10b981] text-white">会員</Badge>
+                    )}
+                    {client.status === 'lost' && (
+                        <Badge variant="secondary">失注</Badge>
+                    )}
+                </div>
+                {client.status === 'trial' && (
+                    <Button size="sm" variant="outline" onClick={() => setShowStatusDialog(true)}>
+                        ステータス変更
+                    </Button>
+                )}
             </div>
+
+            {/* Status Change Dialog */}
+            {showStatusDialog && (
+                <StatusChangeDialog
+                    clientId={client.id}
+                    clientName={client.name}
+                    currentStatus={client.status || 'member'}
+                    onStatusChanged={fetchClientAndData}
+                    onClose={() => setShowStatusDialog(false)}
+                />
+            )}
 
             {/* Tabs */}
             <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">

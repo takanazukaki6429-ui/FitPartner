@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, LineChart, Users } from 'lucide-react';
+import { LayoutDashboard, LineChart, Users, TrendingUp } from 'lucide-react';
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
@@ -11,6 +11,11 @@ const NAV_ITEMS = [
         label: 'Home',
         href: '/',
         icon: LayoutDashboard,
+    },
+    {
+        label: '分析',
+        href: '/analytics',
+        icon: TrendingUp,
     },
     {
         label: 'Closing',
