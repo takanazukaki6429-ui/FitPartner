@@ -151,7 +151,7 @@ export default function Home() {
             const isZeroTickets = client.tickets_remaining === 0;
 
             return (
-              <Card key={apt.id} className={cn("overflow-hidden transition-all", isCompleted ? "opacity-60 bg-gray-50" : "bg-white border-l-4 border-l-primary")}>
+              <Card key={apt.id} className={cn("overflow-hidden transition-all", isCompleted ? "opacity-60 bg-gray-50" : "bg-white border-l-4 border-l-[#2563eb]")}>
                 <CardContent className="p-4 flex items-center justify-between">
                   {/* Left: Time & Client Info */}
                   <div className="flex-1">
@@ -182,7 +182,7 @@ export default function Home() {
                         size="lg"
                         className={cn(
                           "h-14 w-16 shadow-md transition-transform active:scale-95 flex flex-col gap-0 rounded-xl",
-                          isZeroTickets ? "bg-destructive hover:bg-destructive/90" : "bg-primary hover:bg-primary/90"
+                          isZeroTickets ? "bg-[#ef4444] hover:bg-[#dc2626]" : "bg-[#2563eb] hover:bg-[#1d4ed8]"
                         )}
                       >
                         <span className="text-xs font-light opacity-90">消化</span>
