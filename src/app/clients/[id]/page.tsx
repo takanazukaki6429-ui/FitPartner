@@ -6,7 +6,7 @@ import { supabase } from '@/lib/supabaseClient';
 import { uploadClientPhoto } from '@/lib/supabaseStorage';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, User, Camera, Utensils, Upload, Sparkles, LineChart, ClipboardList } from 'lucide-react';
+import { ArrowLeft, User, Camera, Utensils, Upload, Sparkles, LineChart, ClipboardList, Edit2 } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { toast } from 'sonner';
 import PhotoCompareSlider from '@/components/PhotoCompareSlider';
@@ -17,6 +17,7 @@ import TrainingLogInput from '@/components/TrainingLogInput';
 import TrainingLogList from '@/components/TrainingLogList';
 import type { PlanResult } from '@/app/plan/page';
 import StatusChangeDialog from '@/components/StatusChangeDialog';
+import ClientEditDialog from '@/components/ClientEditDialog';
 
 interface Client {
     id: string;
@@ -47,6 +48,7 @@ export default function ClientDetailPage() {
     const [trainingLogs, setTrainingLogs] = useState<any[]>([]);
     const [bodyCompLogs, setBodyCompLogs] = useState<any[]>([]);
     const [showStatusDialog, setShowStatusDialog] = useState(false);
+    const [showEditDialog, setShowEditDialog] = useState(false);
 
     const fetchClientAndData = async () => {
         // Fetch Client
@@ -170,12 +172,26 @@ export default function ClientDetailPage() {
                         <Badge variant="secondary">失注</Badge>
                     )}
                 </div>
-                {client.status === 'trial' && (
-                    <Button size="sm" variant="outline" onClick={() => setShowStatusDialog(true)}>
-                        ステータス変更
+                <div className="flex gap-2">
+                    <Button size="icon" variant="outline" onClick={() => setShowEditDialog(true)}>
+                        <Edit2 className="w-4 h-4" />
                     </Button>
-                )}
+                    {client.status === 'trial' && (
+                        <Button size="sm" variant="outline" onClick={() => setShowStatusDialog(true)}>
+                            ステータス変更
+                        </Button>
+                    )}
+                </div>
             </div>
+
+            {/* Edit Dialog */}
+            {showEditDialog && (
+                <ClientEditDialog
+                    client={client}
+                    onSaved={fetchClientAndData}
+                    onClose={() => setShowEditDialog(false)}
+                />
+            )}
 
             {/* Status Change Dialog */}
             {showStatusDialog && (
