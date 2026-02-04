@@ -176,11 +176,9 @@ export default function ClientDetailPage() {
                     <Button size="icon" variant="outline" onClick={() => setShowEditDialog(true)}>
                         <Edit2 className="w-4 h-4" />
                     </Button>
-                    {client.status === 'trial' && (
-                        <Button size="sm" variant="outline" onClick={() => setShowStatusDialog(true)}>
-                            ステータス変更
-                        </Button>
-                    )}
+                    <Button size="sm" variant="outline" onClick={() => setShowStatusDialog(true)}>
+                        ステータス変更
+                    </Button>
                 </div>
             </div>
 
