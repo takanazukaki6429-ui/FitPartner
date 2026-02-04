@@ -1,7 +1,7 @@
 "use client"
 
 import { Card, CardContent } from "@/components/ui/card";
-import { Dumbbell, Calendar } from 'lucide-react';
+import { Dumbbell, Calendar, MessageSquare } from 'lucide-react';
 
 interface TrainingLog {
     id: string;
@@ -49,16 +49,26 @@ export default function TrainingLogList({ logs }: TrainingLogListProps) {
                     <div className="space-y-3 pl-2">
                         {groupedLogs[date].map(log => (
                             <Card key={log.id} className="border-l-4 border-l-[#e2e8f0] hover:border-l-[#2563eb] transition-colors">
-                                <CardContent className="p-4 flex justify-between items-center">
-                                    <div>
-                                        <p className="font-bold text-[#0f172a]">{log.menu_name}</p>
+                                <CardContent className="p-4">
+                                    <div className="flex justify-between items-center">
+                                        <div>
+                                            <p className="font-bold text-[#0f172a]">{log.menu_name}</p>
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="font-bold text-lg text-[#2563eb]">
+                                                {log.weight}kg <span className="text-xs text-[#64748b]">×</span> {log.sets}set
+                                            </p>
+                                            <p className="text-xs text-[#64748b]">{log.reps} reps</p>
+                                        </div>
                                     </div>
-                                    <div className="text-right">
-                                        <p className="font-bold text-lg text-[#2563eb]">
-                                            {log.weight}kg <span className="text-xs text-[#64748b]">×</span> {log.sets}set
-                                        </p>
-                                        <p className="text-xs text-[#64748b]">{log.reps} reps</p>
-                                    </div>
+                                    {log.notes && (
+                                        <div className="mt-3 pt-3 border-t border-[#e2e8f0]">
+                                            <div className="flex items-start gap-2 text-sm text-[#64748b]">
+                                                <MessageSquare className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                                                <p className="whitespace-pre-wrap">{log.notes}</p>
+                                            </div>
+                                        </div>
+                                    )}
                                 </CardContent>
                             </Card>
                         ))}

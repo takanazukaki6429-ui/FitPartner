@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from 'sonner';
@@ -21,6 +22,7 @@ export default function TrainingLogInput({ clientId, onAdded }: TrainingLogInput
     const [weight, setWeight] = useState('');
     const [reps, setReps] = useState('');
     const [sets, setSets] = useState('');
+    const [notes, setNotes] = useState('');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -35,6 +37,7 @@ export default function TrainingLogInput({ clientId, onAdded }: TrainingLogInput
                 weight: weight ? parseFloat(weight) : null,
                 reps: reps ? parseInt(reps) : null,
                 sets: sets ? parseInt(sets) : null,
+                notes: notes.trim() || null,
             });
 
             if (error) throw error;
@@ -44,6 +47,7 @@ export default function TrainingLogInput({ clientId, onAdded }: TrainingLogInput
             setWeight('');
             setReps('');
             setSets('');
+            setNotes('');
             onAdded();
         } catch (error) {
             console.error(error);
@@ -110,13 +114,23 @@ export default function TrainingLogInput({ clientId, onAdded }: TrainingLogInput
                             />
                         </div>
                     </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="notes">セッションメモ</Label>
+                        <Textarea
+                            id="notes"
+                            placeholder="腰が重いとのこと。ストレッチ多め。仕事が繁忙期..."
+                            value={notes}
+                            onChange={(e) => setNotes(e.target.value)}
+                            rows={3}
+                        />
+                    </div>
                     <Button type="submit" disabled={isSubmitting} className="w-full bg-[#2563eb]">
                         {isSubmitting ? (
                             <Loader2 className="w-4 h-4 animate-spin mr-2" />
                         ) : (
                             <Dumbbell className="w-4 h-4 mr-2" />
                         )}
-                        実績を追加
+                        ログを追加
                     </Button>
                 </form>
             </CardContent>

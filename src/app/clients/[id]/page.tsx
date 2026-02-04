@@ -147,7 +147,7 @@ export default function ClientDetailPage() {
     const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
         { id: 'info', label: '基本', icon: <User className="w-4 h-4" /> },
         { id: 'progress', label: '推移', icon: <LineChart className="w-4 h-4" /> },
-        { id: 'logs', label: '実績', icon: <ClipboardList className="w-4 h-4" /> },
+        { id: 'logs', label: 'ログ', icon: <ClipboardList className="w-4 h-4" /> },
         { id: 'plans', label: 'プラン', icon: <Sparkles className="w-4 h-4" /> },
         { id: 'photos', label: '写真', icon: <Camera className="w-4 h-4" /> },
         { id: 'meals', label: '食事', icon: <Utensils className="w-4 h-4" /> },
