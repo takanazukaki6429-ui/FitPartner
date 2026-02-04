@@ -157,7 +157,12 @@ export default function Home() {
                   <div className="flex-1">
                     <p className="text-sm font-semibold text-gray-500 mb-1">{apt.time}</p>
                     <div className="flex items-center gap-2">
-                      <p className="font-bold text-lg">{client.name}</p>
+                      <p
+                        className="font-bold text-lg text-[#2563eb] cursor-pointer hover:underline"
+                        onClick={() => router.push(`/clients/${client.id}`)}
+                      >
+                        {client.name}
+                      </p>
                       {isZeroTickets && (
                         <Badge variant="destructive" className="text-[10px] h-5 px-1.5 flex gap-1">
                           <AlertCircle className="w-3 h-3" />
