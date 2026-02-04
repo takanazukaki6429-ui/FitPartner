@@ -11,6 +11,7 @@ export interface ChurnRiskClient {
     lastVisit: string | null;
     ticketsRemaining: number;
     daysSinceLastVisit: number | null;
+    notes: string | null;  // トレーナーメモ
 }
 
 /**
@@ -77,7 +78,7 @@ async function getRecentCancellationCount(clientId: string): Promise<number> {
 export async function getChurnRiskClients(): Promise<ChurnRiskClient[]> {
     const { data: clients, error } = await supabase
         .from('clients')
-        .select('id, name, last_visit, tickets_remaining');
+        .select('id, name, last_visit, tickets_remaining, notes');
 
     if (error || !clients) {
         console.error('Error fetching clients:', error);
@@ -107,6 +108,7 @@ export async function getChurnRiskClients(): Promise<ChurnRiskClient[]> {
                     lastVisit: client.last_visit,
                     ticketsRemaining: client.tickets_remaining,
                     daysSinceLastVisit,
+                    notes: client.notes,
                 });
                 continue; // Skip other checks if already flagged
             }
@@ -124,6 +126,7 @@ export async function getChurnRiskClients(): Promise<ChurnRiskClient[]> {
                 lastVisit: client.last_visit,
                 ticketsRemaining: client.tickets_remaining,
                 daysSinceLastVisit,
+                notes: client.notes,
             });
             continue;
         }
@@ -141,6 +144,7 @@ export async function getChurnRiskClients(): Promise<ChurnRiskClient[]> {
                     lastVisit: client.last_visit,
                     ticketsRemaining: client.tickets_remaining,
                     daysSinceLastVisit,
+                    notes: client.notes,
                 });
             }
         }

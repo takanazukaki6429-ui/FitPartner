@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { AlertTriangle, MessageCircle, Loader2, Copy, Check, ChevronRight } from 'lucide-react';
+import { Textarea } from "@/components/ui/textarea";
+import { AlertTriangle, MessageCircle, Loader2, Copy, Check, ChevronRight, RefreshCw, Edit2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 
@@ -17,6 +18,7 @@ interface ChurnRiskClient {
     lastVisit: string | null;
     ticketsRemaining: number;
     daysSinceLastVisit: number | null;
+    notes: string | null;
 }
 
 export default function ChurnAlertCard() {
@@ -25,6 +27,7 @@ export default function ChurnAlertCard() {
     const [loading, setLoading] = useState(true);
     const [generatingMessage, setGeneratingMessage] = useState<string | null>(null);
     const [generatedMessage, setGeneratedMessage] = useState<{ [key: string]: string }>({});
+    const [editingId, setEditingId] = useState<string | null>(null);
     const [copiedId, setCopiedId] = useState<string | null>(null);
 
     useEffect(() => {
@@ -55,6 +58,7 @@ export default function ChurnAlertCard() {
                     riskType: client.riskType,
                     riskReason: client.riskReason,
                     daysSinceLastVisit: client.daysSinceLastVisit,
+                    notes: client.notes,  // トレーナーメモを追加
                 }),
             });
 
@@ -68,6 +72,10 @@ export default function ChurnAlertCard() {
         } finally {
             setGeneratingMessage(null);
         }
+    };
+
+    const handleMessageChange = (clientId: string, newMessage: string) => {
+        setGeneratedMessage(prev => ({ ...prev, [clientId]: newMessage }));
     };
 
     const handleCopyMessage = async (clientId: string, message: string) => {
@@ -101,7 +109,7 @@ export default function ChurnAlertCard() {
     }
 
     if (clients.length === 0) {
-        return null; // Don't show card if no at-risk clients
+        return null;
     }
 
     return (
@@ -137,18 +145,48 @@ export default function ChurnAlertCard() {
 
                         {generatedMessage[client.id] ? (
                             <div className="bg-[#f1f5f9] rounded-lg p-3 space-y-2">
-                                <p className="text-sm">{generatedMessage[client.id]}</p>
+                                {editingId === client.id ? (
+                                    <Textarea
+                                        value={generatedMessage[client.id]}
+                                        onChange={(e) => handleMessageChange(client.id, e.target.value)}
+                                        className="min-h-[100px] text-sm"
+                                        autoFocus
+                                    />
+                                ) : (
+                                    <p className="text-sm whitespace-pre-wrap">{generatedMessage[client.id]}</p>
+                                )}
+                                <div className="flex gap-2">
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="flex-1"
+                                        onClick={() => setEditingId(editingId === client.id ? null : client.id)}
+                                    >
+                                        <Edit2 className="w-4 h-4 mr-1" />
+                                        {editingId === client.id ? '完了' : '編集'}
+                                    </Button>
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="flex-1"
+                                        onClick={() => handleCopyMessage(client.id, generatedMessage[client.id])}
+                                    >
+                                        {copiedId === client.id ? (
+                                            <><Check className="w-4 h-4 mr-1" />コピー済み</>
+                                        ) : (
+                                            <><Copy className="w-4 h-4 mr-1" />コピー</>
+                                        )}
+                                    </Button>
+                                </div>
                                 <Button
-                                    variant="outline"
+                                    variant="ghost"
                                     size="sm"
-                                    className="w-full"
-                                    onClick={() => handleCopyMessage(client.id, generatedMessage[client.id])}
+                                    className="w-full text-[#64748b]"
+                                    onClick={() => handleGenerateMessage(client)}
+                                    disabled={generatingMessage === client.id}
                                 >
-                                    {copiedId === client.id ? (
-                                        <><Check className="w-4 h-4 mr-1" />コピー済み</>
-                                    ) : (
-                                        <><Copy className="w-4 h-4 mr-1" />LINEにコピー</>
-                                    )}
+                                    <RefreshCw className={`w-4 h-4 mr-1 ${generatingMessage === client.id ? 'animate-spin' : ''}`} />
+                                    再生成
                                 </Button>
                             </div>
                         ) : (
