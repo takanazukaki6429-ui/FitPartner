@@ -7,6 +7,9 @@ interface TrainingLog {
     id: string;
     date: string;
     menu_name: string;
+    weight?: number;
+    reps?: number;
+    sets?: number;
     notes?: string;
 }
 
@@ -47,17 +50,29 @@ export default function TrainingLogList({ logs }: TrainingLogListProps) {
                         {groupedLogs[date].map(log => (
                             <Card key={log.id} className="border-l-4 border-l-[#2563eb]">
                                 <CardContent className="p-4">
-                                    {/* Menu */}
-                                    <div className="flex items-start gap-2">
-                                        <Dumbbell className="w-4 h-4 mt-1 text-[#2563eb] flex-shrink-0" />
-                                        <p className="whitespace-pre-wrap text-[#0f172a]">{log.menu_name}</p>
+                                    <div className="flex justify-between items-center">
+                                        <div className="flex items-center gap-2">
+                                            <Dumbbell className="w-4 h-4 text-[#2563eb]" />
+                                            <span className="font-bold text-[#0f172a]">{log.menu_name}</span>
+                                        </div>
+                                        <div className="text-right">
+                                            {log.weight && (
+                                                <span className="font-bold text-lg text-[#2563eb]">
+                                                    {log.weight}kg
+                                                </span>
+                                            )}
+                                            {log.reps && log.sets && (
+                                                <span className="text-sm text-[#64748b] ml-2">
+                                                    {log.reps}回×{log.sets}set
+                                                </span>
+                                            )}
+                                        </div>
                                     </div>
 
-                                    {/* Notes */}
                                     {log.notes && (
-                                        <div className="mt-3 pt-3 border-t border-[#e2e8f0]">
+                                        <div className="mt-2 pt-2 border-t border-[#e2e8f0]">
                                             <div className="flex items-start gap-2 text-sm text-[#64748b]">
-                                                <MessageSquare className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                                                <MessageSquare className="w-3 h-3 mt-1 flex-shrink-0" />
                                                 <p className="whitespace-pre-wrap">{log.notes}</p>
                                             </div>
                                         </div>
