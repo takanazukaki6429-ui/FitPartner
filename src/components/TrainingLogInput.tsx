@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from 'sonner';
-import { Loader2, Plus, Dumbbell } from 'lucide-react';
+import { Loader2, Copy, Dumbbell } from 'lucide-react';
 
 interface TrainingLogInputProps {
     clientId: string;
@@ -18,36 +18,57 @@ interface TrainingLogInputProps {
 export default function TrainingLogInput({ clientId, onAdded }: TrainingLogInputProps) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
-    const [menuName, setMenuName] = useState('');
-    const [weight, setWeight] = useState('');
-    const [reps, setReps] = useState('');
-    const [sets, setSets] = useState('');
+    const [menu, setMenu] = useState('');
     const [notes, setNotes] = useState('');
+    const [lastMenu, setLastMenu] = useState<string | null>(null);
+
+    // Fetch last session's menu for copy feature
+    useEffect(() => {
+        const fetchLastMenu = async () => {
+            const { data } = await supabase
+                .from('training_logs')
+                .select('menu_name')
+                .eq('client_id', clientId)
+                .order('date', { ascending: false })
+                .limit(1)
+                .single();
+
+            if (data?.menu_name) {
+                setLastMenu(data.menu_name);
+            }
+        };
+        fetchLastMenu();
+    }, [clientId]);
+
+    const handleCopyLastMenu = () => {
+        if (lastMenu) {
+            setMenu(lastMenu);
+            toast.success('前回のメニューをコピーしました');
+        }
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!menuName) return;
+        if (!menu.trim()) {
+            toast.error('メニューを入力してください');
+            return;
+        }
 
         setIsSubmitting(true);
         try {
             const { error } = await supabase.from('training_logs').insert({
                 client_id: clientId,
                 date,
-                menu_name: menuName,
-                weight: weight ? parseFloat(weight) : null,
-                reps: reps ? parseInt(reps) : null,
-                sets: sets ? parseInt(sets) : null,
+                menu_name: menu.trim(),
                 notes: notes.trim() || null,
             });
 
             if (error) throw error;
 
-            toast.success('ログを追加しました');
-            setMenuName('');
-            setWeight('');
-            setReps('');
-            setSets('');
+            toast.success('ログを保存しました');
+            setMenu('');
             setNotes('');
+            setLastMenu(menu.trim()); // Update last menu for next copy
             onAdded();
         } catch (error) {
             console.error(error);
@@ -61,76 +82,63 @@ export default function TrainingLogInput({ clientId, onAdded }: TrainingLogInput
         <Card className="mb-6 border-l-4 border-l-[#2563eb]">
             <CardContent className="pt-6">
                 <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="flex gap-2 items-end">
+                        <div className="flex-1 space-y-2">
+                            <Label htmlFor="t_date">日付</Label>
+                            <Input
+                                id="t_date"
+                                type="date"
+                                value={date}
+                                onChange={(e) => setDate(e.target.value)}
+                                required
+                            />
+                        </div>
+                        {lastMenu && (
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={handleCopyLastMenu}
+                                className="h-10 whitespace-nowrap"
+                            >
+                                <Copy className="w-4 h-4 mr-1" />
+                                前回コピー
+                            </Button>
+                        )}
+                    </div>
+
                     <div className="space-y-2">
-                        <Label htmlFor="t_date">日付</Label>
-                        <Input
-                            id="t_date"
-                            type="date"
-                            value={date}
-                            onChange={(e) => setDate(e.target.value)}
+                        <Label htmlFor="menu">今日のメニュー</Label>
+                        <Textarea
+                            id="menu"
+                            placeholder="スクワット 60kg×10×3
+ベンチプレス 40kg×10×3
+ラットプルダウン 35kg×12×3"
+                            value={menu}
+                            onChange={(e) => setMenu(e.target.value)}
+                            rows={4}
                             required
                         />
                     </div>
+
                     <div className="space-y-2">
-                        <Label htmlFor="menuName">種目名</Label>
-                        <Input
-                            id="menuName"
-                            placeholder="ベンチプレス"
-                            value={menuName}
-                            onChange={(e) => setMenuName(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className="grid grid-cols-3 gap-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="weight_val">重量(kg)</Label>
-                            <Input
-                                id="weight_val"
-                                type="number"
-                                step="0.5"
-                                placeholder="40"
-                                value={weight}
-                                onChange={(e) => setWeight(e.target.value)}
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="sets_val">セット数</Label>
-                            <Input
-                                id="sets_val"
-                                type="number"
-                                placeholder="3"
-                                value={sets}
-                                onChange={(e) => setSets(e.target.value)}
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="reps_val">回数</Label>
-                            <Input
-                                id="reps_val"
-                                type="number"
-                                placeholder="10"
-                                value={reps}
-                                onChange={(e) => setReps(e.target.value)}
-                            />
-                        </div>
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="notes">セッションメモ</Label>
+                        <Label htmlFor="notes">メモ（任意）</Label>
                         <Textarea
                             id="notes"
-                            placeholder="腰が重いとのこと。ストレッチ多め。仕事が繁忙期..."
+                            placeholder="腰が重いとのこと。ストレッチ多め..."
                             value={notes}
                             onChange={(e) => setNotes(e.target.value)}
-                            rows={3}
+                            rows={2}
                         />
                     </div>
+
                     <Button type="submit" disabled={isSubmitting} className="w-full bg-[#2563eb]">
                         {isSubmitting ? (
                             <Loader2 className="w-4 h-4 animate-spin mr-2" />
                         ) : (
                             <Dumbbell className="w-4 h-4 mr-2" />
                         )}
-                        ログを追加
+                        ログを保存
                     </Button>
                 </form>
             </CardContent>

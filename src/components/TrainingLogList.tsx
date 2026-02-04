@@ -7,9 +7,6 @@ interface TrainingLog {
     id: string;
     date: string;
     menu_name: string;
-    weight?: number;
-    reps?: number;
-    sets?: number;
     notes?: string;
 }
 
@@ -44,23 +41,19 @@ export default function TrainingLogList({ logs }: TrainingLogListProps) {
                 <div key={date}>
                     <div className="flex items-center gap-2 mb-2 text-[#64748b] bg-[#f1f5f9] px-3 py-1 rounded-full w-fit">
                         <Calendar className="w-4 h-4" />
-                        <span className="text-sm font-medium">{new Date(date).toLocaleDateString()}</span>
+                        <span className="text-sm font-medium">{new Date(date).toLocaleDateString('ja-JP')}</span>
                     </div>
                     <div className="space-y-3 pl-2">
                         {groupedLogs[date].map(log => (
-                            <Card key={log.id} className="border-l-4 border-l-[#e2e8f0] hover:border-l-[#2563eb] transition-colors">
+                            <Card key={log.id} className="border-l-4 border-l-[#2563eb]">
                                 <CardContent className="p-4">
-                                    <div className="flex justify-between items-center">
-                                        <div>
-                                            <p className="font-bold text-[#0f172a]">{log.menu_name}</p>
-                                        </div>
-                                        <div className="text-right">
-                                            <p className="font-bold text-lg text-[#2563eb]">
-                                                {log.weight}kg <span className="text-xs text-[#64748b]">×</span> {log.sets}set
-                                            </p>
-                                            <p className="text-xs text-[#64748b]">{log.reps} reps</p>
-                                        </div>
+                                    {/* Menu */}
+                                    <div className="flex items-start gap-2">
+                                        <Dumbbell className="w-4 h-4 mt-1 text-[#2563eb] flex-shrink-0" />
+                                        <p className="whitespace-pre-wrap text-[#0f172a]">{log.menu_name}</p>
                                     </div>
+
+                                    {/* Notes */}
                                     {log.notes && (
                                         <div className="mt-3 pt-3 border-t border-[#e2e8f0]">
                                             <div className="flex items-start gap-2 text-sm text-[#64748b]">
