@@ -1,11 +1,11 @@
 {
     "name": "FitPartner",
     "short_name": "FitPartner",
-    "description": "Personal Trainer Support App",
+    "description": "パーソナルトレーナー向け顧客管理アプリ",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#ffffff",
-    "theme_color": "#ffffff",
+    "theme_color": "#2563eb",
     "icons": [
         {
             "src": "/icon.png",
