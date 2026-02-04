@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from 'sonner';
-import { Loader2, Copy, Dumbbell, Plus, Trash2 } from 'lucide-react';
+import { Loader2, Copy, Dumbbell, Plus, Trash2, ChevronDown } from 'lucide-react';
 
 interface TrainingLogInputProps {
     clientId: string;
@@ -31,10 +31,25 @@ export default function TrainingLogInput({ clientId, onAdded }: TrainingLogInput
     ]);
     const [notes, setNotes] = useState('');
     const [lastExercises, setLastExercises] = useState<ExerciseRow[]>([]);
+    const [exerciseOptions, setExerciseOptions] = useState<string[]>([]);
+    const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
-    // Fetch last session for copy feature
+    // Fetch exercise options and last session
     useEffect(() => {
-        const fetchLastLogs = async () => {
+        const fetchData = async () => {
+            // Fetch all unique exercise names for this client
+            const { data: allLogs } = await supabase
+                .from('training_logs')
+                .select('menu_name')
+                .eq('client_id', clientId);
+
+            if (allLogs) {
+                const uniqueNames = [...new Set(allLogs.map(log => log.menu_name))].filter(Boolean).sort();
+                setExerciseOptions(uniqueNames);
+            }
+
+            // Fetch last session for copy feature
             const { data } = await supabase
                 .from('training_logs')
                 .select('menu_name, weight, reps, sets, date')
@@ -44,9 +59,7 @@ export default function TrainingLogInput({ clientId, onAdded }: TrainingLogInput
                 .limit(10);
 
             if (data && data.length > 0) {
-                // Get the most recent date
                 const lastDate = data[0].date;
-                // Filter to only that date's exercises
                 const lastDayLogs = data.filter(d => d.date === lastDate);
                 setLastExercises(lastDayLogs.map((log, i) => ({
                     id: i + 1,
@@ -57,8 +70,19 @@ export default function TrainingLogInput({ clientId, onAdded }: TrainingLogInput
                 })));
             }
         };
-        fetchLastLogs();
+        fetchData();
     }, [clientId]);
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+                setOpenDropdownId(null);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     const handleCopyLast = () => {
         if (lastExercises.length > 0) {
@@ -80,6 +104,11 @@ export default function TrainingLogInput({ clientId, onAdded }: TrainingLogInput
 
     const updateRow = (id: number, field: keyof ExerciseRow, value: string) => {
         setExercises(exercises.map(e => e.id === id ? { ...e, [field]: value } : e));
+    };
+
+    const selectExercise = (id: number, name: string) => {
+        updateRow(id, 'menuName', name);
+        setOpenDropdownId(null);
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -108,9 +137,12 @@ export default function TrainingLogInput({ clientId, onAdded }: TrainingLogInput
             if (error) throw error;
 
             toast.success(`${validExercises.length}件のログを保存しました`);
-            // Update last exercises for next copy
+
+            // Add new exercise names to options
+            const newNames = validExercises.map(e => e.menuName.trim());
+            setExerciseOptions([...new Set([...exerciseOptions, ...newNames])].sort());
+
             setLastExercises(validExercises);
-            // Reset form
             setExercises([{ id: 1, menuName: '', weight: '', reps: '', sets: '' }]);
             setNotes('');
             onAdded();
@@ -153,16 +185,39 @@ export default function TrainingLogInput({ clientId, onAdded }: TrainingLogInput
                     </div>
 
                     {/* Exercise Rows */}
-                    <div className="space-y-2">
+                    <div className="space-y-2" ref={dropdownRef}>
                         {exercises.map((row, index) => (
                             <div key={row.id} className="grid grid-cols-12 gap-1 items-end">
-                                <div className="col-span-4">
+                                <div className="col-span-4 relative">
                                     {index === 0 && <Label className="text-xs">種目</Label>}
-                                    <Input
-                                        placeholder="プルダウン"
-                                        value={row.menuName}
-                                        onChange={(e) => updateRow(row.id, 'menuName', e.target.value)}
-                                    />
+                                    <div className="relative">
+                                        <Input
+                                            placeholder="種目を選択"
+                                            value={row.menuName}
+                                            onChange={(e) => updateRow(row.id, 'menuName', e.target.value)}
+                                            onFocus={() => setOpenDropdownId(row.id)}
+                                        />
+                                        <ChevronDown
+                                            className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9ca3af] cursor-pointer"
+                                            onClick={() => setOpenDropdownId(openDropdownId === row.id ? null : row.id)}
+                                        />
+                                    </div>
+                                    {/* Dropdown */}
+                                    {openDropdownId === row.id && exerciseOptions.length > 0 && (
+                                        <div className="absolute z-50 w-full mt-1 bg-white border rounded-lg shadow-lg max-h-40 overflow-y-auto">
+                                            {exerciseOptions
+                                                .filter(opt => opt.toLowerCase().includes(row.menuName.toLowerCase()))
+                                                .map((opt) => (
+                                                    <div
+                                                        key={opt}
+                                                        className="px-3 py-2 hover:bg-[#f1f5f9] cursor-pointer text-sm"
+                                                        onClick={() => selectExercise(row.id, opt)}
+                                                    >
+                                                        {opt}
+                                                    </div>
+                                                ))}
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="col-span-2">
                                     {index === 0 && <Label className="text-xs">重量</Label>}
