@@ -21,6 +21,7 @@ const clientSchema = z.object({
     currentWeight: z.coerce.number().min(0, "0以上の数値を入力してください"),
     targetWeight: z.coerce.number().min(0, "0以上の数値を入力してください"),
     ticketsRemaining: z.coerce.number().int().min(0, "0以上の整数を入力してください"),
+    status: z.enum(['trial', 'member']),
     notes: z.string().optional(),
 });
 
@@ -44,6 +45,7 @@ function NewClientForm() {
             currentWeight: 0,
             targetWeight: 0,
             ticketsRemaining: 0,
+            status: 'trial' as const,
             notes: '',
         },
     });
@@ -67,7 +69,7 @@ function NewClientForm() {
                 target_weight: data.targetWeight,
                 tickets_remaining: data.ticketsRemaining,
                 notes: data.notes,
-                status: 'trial', // Default to trial for new registrations
+                status: data.status,
             }).select().single();
 
             if (error) throw error;
@@ -175,6 +177,19 @@ function NewClientForm() {
                                 className={errors.ticketsRemaining ? "border-red-500" : ""}
                             />
                             {errors.ticketsRemaining && <p className="text-xs text-red-500">{errors.ticketsRemaining.message}</p>}
+                        </div>
+
+                        {/* Status */}
+                        <div className="space-y-2">
+                            <Label htmlFor="status">ステータス</Label>
+                            <select
+                                id="status"
+                                {...register('status')}
+                                className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm"
+                            >
+                                <option value="trial">体験</option>
+                                <option value="member">会員</option>
+                            </select>
                         </div>
 
                         {/* Notes */}
