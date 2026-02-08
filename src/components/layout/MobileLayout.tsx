@@ -32,6 +32,13 @@ const NAV_ITEMS = [
 export function MobileLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
 
+    // /demo 配下ではナビゲーションを非表示
+    const isDemo = pathname.startsWith('/demo');
+
+    if (isDemo) {
+        return <>{children}</>;
+    }
+
     return (
         <div className="flex flex-col min-h-screen bg-gray-50 pb-20">
             {/* Simple Header */}
