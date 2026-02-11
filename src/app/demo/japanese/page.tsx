@@ -131,9 +131,24 @@ function getPurposeMilestone(purposeId: PurposeId, monthLevel: number, t: Transl
     return milestoneTexts[milestoneTexts.length - 1];
 }
 
+// 目的別レッスン数の倍率
+const PURPOSE_LESSON_MULTIPLIER: Record<string, number> = {
+    anime: 1.0,
+    friends: 1.1,
+    travel: 0.9,
+    culture: 0.9,
+    live: 1.1,
+    work: 1.2,
+    beauty: 0.8,
+    challenge: 1.0,
+    other: 1.0,
+};
+
 function generateMilestones(currentLevel: number, targetLevel: number, months: number, purposeId: PurposeId, t: Translations) {
     const milestones = [];
     const levelPerMonth = (targetLevel - currentLevel) / months;
+    const purposeContent = t.purposeMonthlyContent[purposeId as keyof typeof t.purposeMonthlyContent] || t.purposeMonthlyContent.other;
+    const lessonMultiplier = PURPOSE_LESSON_MULTIPLIER[purposeId] || 1.0;
 
     for (let i = 1; i <= months; i++) {
         const monthLevel = currentLevel + (levelPerMonth * i);
@@ -154,11 +169,11 @@ function generateMilestones(currentLevel: number, targetLevel: number, months: n
             level: Math.round(monthLevel),
             jlpt: jlptLevel.name,
             jlptColor: jlptLevel.color,
-            focus: t.monthlyContent.focus[contentIdx],
-            skills: t.monthlyContent.skills[contentIdx],
-            reason: t.monthlyContent.reasons[contentIdx],
+            focus: purposeContent.focus[contentIdx],
+            skills: purposeContent.skills[contentIdx],
+            reason: purposeContent.reasons[contentIdx],
             purposeMilestone: getPurposeMilestone(purposeId, monthLevel, t),
-            lessonsNeeded: Math.ceil(levelPerMonth * 2),
+            lessonsNeeded: Math.ceil(levelPerMonth * 2 * lessonMultiplier),
         });
     }
     return milestones;
