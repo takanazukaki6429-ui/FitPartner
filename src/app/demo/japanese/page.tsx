@@ -172,6 +172,9 @@ function generateMilestones(currentLevel: number, targetLevel: number, months: n
             focus: purposeContent.focus[contentIdx],
             skills: purposeContent.skills[contentIdx],
             reason: purposeContent.reasons[contentIdx],
+            textbooks: purposeContent.textbooks[contentIdx],
+            aiPrompt: purposeContent.aiPrompt[contentIdx],
+
             purposeMilestone: getPurposeMilestone(purposeId, monthLevel, t),
             lessonsNeeded: Math.ceil(levelPerMonth * 2 * lessonMultiplier),
         });
@@ -657,6 +660,34 @@ export default function JapaneseRoadmapPage() {
                                                 {milestone.reason}
                                             </p>
                                         </div>
+
+                                        <div className="space-y-2 pt-2 border-t border-gray-100">
+                                            <p className="text-sm font-semibold text-[#4b5563] flex gap-2 items-center">
+                                                <BookText className="w-4 h-4 text-[#2563eb]" /> {t.textbooksLabel}
+                                            </p>
+                                            <div className="flex flex-wrap gap-2">
+                                                {milestone.textbooks && milestone.textbooks.map((item: string, i: number) => (
+                                                    <Badge key={i} variant="outline" className="text-xs bg-white text-gray-700 border-gray-200">
+                                                        {item}
+                                                    </Badge>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {milestone.aiPrompt && (
+                                            <div className="mt-3 p-3 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg border border-purple-100 shadow-sm hover:shadow-md transition-all cursor-pointer" onClick={() => { navigator.clipboard.writeText(milestone.aiPrompt); toast.success('Prompt copied!'); }}>
+                                                <div className="flex justify-between items-start mb-1">
+                                                    <p className="text-xs font-bold text-purple-700 flex gap-1.5 items-center">
+                                                        <Sparkles className="w-3.5 h-3.5 fill-purple-700" /> {t.aiPromptLabel}
+                                                    </p>
+                                                    <p className="text-[10px] text-purple-500 bg-purple-100/50 px-1.5 py-0.5 rounded">Click to Copy</p>
+                                                </div>
+                                                <p className="text-sm text-purple-900 leading-relaxed italic">
+                                                    "{milestone.aiPrompt}"
+                                                </p>
+                                            </div>
+                                        )}
+
 
                                         <div className="flex items-center justify-between pt-2 border-t">
                                             <span className="text-sm text-[#64748b]">{t.recommendedLessons}</span>

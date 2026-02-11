@@ -70,6 +70,9 @@ export const en: Translations = {
     achievedSkills: '✅ Skills you\'ll gain',
     whyThisOrder: '📌 Why this order?',
     recommendedLessons: 'Recommended lessons',
+    textbooksLabel: 'Recommended Textbooks',
+    aiPromptLabel: 'AI Roleplay Prompt',
+
     lessonsPerMonth: '/month',
 
     roadmapComplete: '🎉 Your Personal Roadmap is Ready!',
@@ -268,6 +271,16 @@ export const en: Translations = {
                 'Build the ability to understand character-specific speech patterns, dialects, and deeper narrative structures.',
                 'Aim to enjoy works at the same depth as native viewers and discuss analysis in Japanese.',
             ],
+            textbooks: [['Genki I', 'Anime Scripts'], ['Genki II', 'Yotsuba&! (Manga)'], ['Quartet I', 'Slice of Life Anime Scripts'], ['Quartet II', 'Shonen Manga (with Furigana)'], ['Tobira', 'RPG Game Scripts'], ['Shin Kanzen Master N1', 'Light Novels (Easy)'], ['Native Materials', 'Anime Scenarios']],
+            aiPrompt: [
+                'You are a Japanese teacher who loves anime. Teach me 5 basic greeting phrases a beginner should know, speaking in an energetic tone like Luffy from One Piece.',
+                'Explain the nuance and usage of sentence endings like "~daze" and "~kashira" often found in anime, with character dialogue examples.',
+                'Analyze the polite yet strong speaking style of Tanjiro from Demon Slayer and create 3 phrases I can use in daily life.',
+                'Create 5 "tsundere" lines for an anime character, explaining the grammatical structure and emotional nuance of each.',
+                'List 20 important words related to "magic," "equipment," and "adventure" frequent in fantasy RPGs, with example sentences.',
+                'Reproduce lines of an anime character using Kyoto dialect (Kansai-ben) and explain the difference from standard Japanese.',
+                'Write a philosophical monologue in Japanese like in "Neon Genesis Evangelion" and explain the abstract vocabulary used.',
+            ],
         },
         friends: {
             focus: [
@@ -296,6 +309,16 @@ export const en: Translations = {
                 'Understand "reading the air" culture to build deeper trust and stronger bonds.',
                 'Develop the ability to discuss deep topics in Japanese — reaching true best-friend level.',
                 'Complete your ability to converse naturally and equally with native speakers, including cultural depth.',
+            ],
+            textbooks: [['Genki I', 'HelloTalk'], ['Genki II', 'LINE Stickers Japanese'], ['Tsunagu Nihongo', 'Tandem'], ['Quartet I', 'Japanese Dramas (Subtitled)'], ['Quartet II', 'Japanese Variety Shows'], ['Tobira', 'Japanese YouTubers'], ['Native Materials', 'Sharehouse Conversations']],
+            aiPrompt: [
+                'I want to make friends with a Japanese person I just met. Teach me 3 self-introduction phrases that are friendly but not rude.',
+                'Create two examples of natural LINE messages to invite someone to dinner: one for a "close friend" and one for "someone I just met."',
+                'Teach me the positive and negative nuances of slang words young people use like "maji-de" and "yabai," with example sentences.',
+                'List 10 empathetic Japanese phrases (like "That must have been hard") I can use when listening to a friend\'s worries.',
+                'Explain what "reading the air" specifically means using a Japanese drinking party situation as an example.',
+                'Teach me phrases to exchange opinions on recent news with a friend, like "I think this, but what do you think?"',
+                'Teach me some Japanese jokes or "dad jokes" (oyaji gag) and explain why they are funny (wordplay, etc.).',
             ],
         },
         travel: {
@@ -326,6 +349,16 @@ export const en: Translations = {
                 'Become a self-sufficient traveler who can research and make phone reservations independently.',
                 'Become an advanced traveler who can enjoy every corner of Japan and connect deeply with locals.',
             ],
+            textbooks: [['Phrasebook', 'Google Maps'], ['Travel Japanese', 'Train Timetables'], ['Japan Travel Survival', 'Tabelog'], ['Omotenashi Japanese', 'Ryokan Booking Sites'], ['Dialect Chart', 'Rurubu (Travel Mag)'], ['Jalan (Booking Site)', 'Shinkansen App'], ['National Guides', 'Local Newspapers']],
+            aiPrompt: [
+                'I am lost at a station in Japan. Teach me a polite phrase to ask station staff "How to get to Shinjuku Station" and "How long it takes."',
+                'I entered a restaurant in Japan. Create a phrase to say I have an allergy (e.g., shrimp) and ask for a menu without it.',
+                'Explain basic manners I should know when staying at a Ryokan (taking off shoes, hot spring etiquette) in simple Japanese.',
+                'Simulate a conversation where I ask a shop clerk "What do you recommend?" and ask for the reason.',
+                'I am traveling to Kansai (Osaka/Kyoto). Teach me 5 simple Kansai-ben phrases (like "ookini") to use with shop staff.',
+                'I want to book a restaurant by phone. Create a script saying "I would like to make a reservation for 2 people at 7 PM next Saturday."',
+                'Think of 3 slightly intellectual mock questions to ask a guide about history when visiting Japanese castles or temples.',
+            ],
         },
         culture: {
             focus: [
@@ -354,6 +387,16 @@ export const en: Translations = {
                 'Encounter classical expressions and proverbs, savoring the cultural wisdom embedded in Japanese.',
                 'From traditional performing arts to fine arts — reach a level where you can appreciate and explain Japan\'s cultural essence.',
                 'Read classics in the original, reaching a level of understanding and discussion equal to native speakers.',
+            ],
+            textbooks: [['Intro to Japanese Culture', 'Chopstick Tutorials'], ['Japanese Annual Events', 'Japanese Calendar'], ['Tea Ceremony Intro', 'Traditional Crafts Guide'], ['Japanese History Manga', 'Shrine Test Text'], ['Children\'s Analects', 'Hyakunin Isshu'], ['Kabuki Guide', 'Art History Intro'], ['Tale of Genji (Original/Modern)', 'Fushikaden']],
+            aiPrompt: [
+                'Explain the difference between Japanese bows (eshaku, keirei, saikeirei) and when to use each.',
+                'Teach me Japanese phrases to explain the spiritual meaning of "Itadakimasu" and "Gochisousama" to foreigners.',
+                'Briefly explain the Japanese aesthetic of "Wabi-Sabi" in Japanese, using moss or tea bowls as examples.',
+                'Compare the differences between shrines and temples (worship methods, what is enshrined) and create a word list for each.',
+                'Explain the meaning of the famous proverb "Ishi no ue ni mo sannen" and modern situations where it is used.',
+                'I am going to see Kabuki for the first time. Teach me 3 points a beginner should know about unique calls and how to enjoy it.',
+                'Explain the modern translation of the opening of "The Tale of Genji" and its unique atmosphere and cultural background.',
             ],
         },
         live: {
@@ -384,6 +427,16 @@ export const en: Translations = {
                 'Build advanced Japanese for career advancement and legal procedures.',
                 'Aim for complete integration into Japanese society, living comfortably in every situation.',
             ],
+            textbooks: [['Japanese for Life', 'Supermarket Flyers'], ['City Hall Guide', 'Medical Japanese'], ['Reading Contracts', 'Rental Sites'], ['PTA Handbook', 'Circular Notices'], ['Tax Return Guide', 'Disaster Maps'], ['Business Law Intro', 'Hello Work Job Slips'], ['Understanding Japanese Society', 'Newspaper Editorials']],
+            aiPrompt: [
+                'Reproduce a natural interaction at a Japanese convenience store asking to warm up a bento and get chopsticks and a bag.',
+                'Simulate a conversation at a hospital reception to convey "I have had a fever since yesterday and my throat hurts."',
+                'I am looking for an apartment at a real estate agency. Create a dialogue conveying "Rent under 70,000 yen, within 10 min walk from station."',
+                'Garbage sorting rules are confusing. Teach me a conversation to ask a neighbor "Which day should I put out this plastic?"',
+                'Write a polite message for a child\'s school contact book saying "He will be absent tomorrow due to a cold."',
+                'Explain basic keywords beginners should know about year-end tax adjustment and tax returns in Japan (deductions, withholding, etc.).',
+                'Think of a self-introduction speech for a neighborhood association meeting saying "I am still studying Japanese, but nice to meet you."',
+            ],
         },
         work: {
             focus: [
@@ -412,6 +465,16 @@ export const en: Translations = {
                 'Build the ability to read and write documents accurately, earning professional trust.',
                 'Aim for managerial-level Japanese for team management and strategic discussions.',
                 'The highest level of business Japanese for executive roles. Handle any situation with confidence.',
+            ],
+            textbooks: [['Keigo Training', 'Business Card Manners'], ['Business Writing', 'Phone Manuals'], ['Manga Ho-Ren-So', 'Meeting Japanese'], ['Presentation Japanese', 'Logical Speaking'], ['Business Contracts', 'Internal Reports'], ['Nikkei Business', 'Drucker (JP Ver)'], ['HBR Japan', 'Corporate Law']],
+            aiPrompt: [
+                'Teach me the correct step-by-step procedure for exchanging business cards in Japan, with dialogue.',
+                'Create an example of a polite business email asking a client "I would like to change the meeting date."',
+                'Create an appropriate conversation flow for reporting progress to a boss (Ho-Ren-So) starting with "Actually, there is a problem..."',
+                'Teach me 5 variations of phrases to point out concerns in a meeting while agreeing, like "I agree basically, but just one point..."',
+                'Explain the usage of "Osewa ni natte orimasu," "Otsukaresama desu," and "Gokurosama desu" and their NG scenes.',
+                'Create an opening speech for a business presentation that apologizes for a project failure but proposes improvements sincerely.',
+                'Teach me ideal praise words a Japanese boss uses to motivate subordinates (like "Sasuga da ne, kitai ijo da yo").',
             ],
         },
         beauty: {
@@ -442,6 +505,16 @@ export const en: Translations = {
                 'Enter the joy of creative writing. Touch the unique beauty and depth of classical Japanese.',
                 'The final stage: savoring the complete beauty of Japanese — sound, form, and meaning.',
             ],
+            textbooks: [['Calligraphy Practice', 'Hiragana Chart'], ['Kanji Origins', 'Beautiful Words Dict'], ['Japanese Colors', 'Seasonal Words'], ['Aesthetics of Keigo', 'Letter Writing'], ['Haiku Almanac', 'Manyoshu Intro'], ['Kokin Wakashu', 'Tale of the Bamboo Cutter'], ['Tale of Genji', 'Pillow Book']],
+            aiPrompt: [
+                'Teach me tips to write hiragana "a" and "no" beautifully and balanced, relating them to shapes (triangle, circle).',
+                'Introduce 5 beautiful Japanese words related to "rain" (samidare, shigure, etc.) and explain the scenery of each.',
+                'Teach me seasonal greetings (jikou no aisatsu) used in letter openings like "Haikei, sakura no kisetsu..." for each of the 4 seasons.',
+                'Introduce some Japanese expressions that convey love indirectly and elegantly, like "The moon is beautiful, isn\'t it?"',
+                'I want to make Haiku. Create and explain 3 beginner examples using "Summer" and "Sea" as themes.',
+                'Select 10 Japanese onomatopoeia with particularly beautiful sounds (like "shitoshito," "kirakira").',
+                'Select one famous romantic poem from Hyakunin Isshu and explain its meaning and background in a modern way.',
+            ],
         },
         challenge: {
             focus: [
@@ -471,6 +544,16 @@ export const en: Translations = {
                 'N1 is the pinnacle for Japanese learners. Tackle abstract vocabulary and complex grammar patterns.',
                 'Beyond N1 to true Japanese mastery. Complete freedom in academic, business, and daily situations.',
             ],
+            textbooks: [['Genki I', 'Kanji Master N5'], ['Shin Kanzen Master N5', 'JLPT N5 Prep'], ['Shin Kanzen Master N4', 'Sou Matome N4'], ['Shin Kanzen Master N3', 'Sou Matome N3'], ['Shin Kanzen Master N2', 'Sou Matome N2'], ['Shin Kanzen Master N1', 'Sou Matome N1'], ['Advanced Reading', 'Learn with News']],
+            aiPrompt: [
+                'Create 10 conjugation practice questions for N5 essential verbs (iku, taberu, miru) covering present, past, and negative forms.',
+                'Explain the difference between N4 grammar "~te wa ikemasen" (prohibition) and "~nakutemo ii desu" (not necessary) with 5 practice questions.',
+                'Teach me techniques for "Task-Based Understanding" questions often found in N3 listening tests (reading questions first, taking notes, etc.).',
+                'I run out of time in N2 reading. Explain tips for speed reading and how to focus on conjunctions (shikashi, tsumari).',
+                'Propose some mnemonics or story memory methods to remember difficult N1 kanji (like "chucho," "kairi").',
+                'Give me advice on what to do in the week before the JLPT (daily rhythm, review priorities).',
+                'Correct my short essay ([Insert text here]) and rewrite it into more natural, advanced Japanese expressions.',
+            ],
         },
         other: {
             focus: [
@@ -499,6 +582,16 @@ export const en: Translations = {
                 'Polish practical Japanese skills for use in work and studies.',
                 'Acquire advanced skills to use Japanese professionally.',
                 'Aim for near-native proficiency to use Japanese confidently in any situation.',
+            ],
+            textbooks: [['Tae Kim\'s Guide', 'Duolingo'], ['Genki I', 'Anki Core 2k'], ['Genki II', 'NHK Easy Japanese'], ['Tobira Gateway', 'News Web Easy'], ['Tobira Advanced', 'Japanese Novels'], ['New Kanzen Master N1', 'Japanese News'], ['Read Japanese Society', 'Academic Papers']],
+            aiPrompt: [
+                'Explain the difference between Japanese "wa" and "ga" using simple example sentences a beginner can understand.',
+                'Teach me 3 of the most basic and natural ordering phrases to use at restaurants or shops in Japan.',
+                'Japanese counters (ippon, ippiki, ichimai) are hard to remember. Teach me the top 5 most used counters and how to remember them.',
+                'Create a usage chart for Keigo (Teineigo, Sonkeigo, Kenjougo) showing representative verb changes (iku -> ikimasu, irasshaimasu, mairimasu).',
+                'Summarize this recent Japanese news article ([Insert article here]) and rewrite it into simple Japanese a dictionary school student could understand.',
+                'Teach me a short script for shadowing practice to improve my pronunciation, along with practice points.',
+                'Teach me variations of "Aizuchi" (nodding/responses) Japanese use in conversation ("Hee," "Sou nanda," "Naruhodo") and how to use them.',
             ],
         },
     },
